@@ -11,27 +11,27 @@
 
 ////////////////////
 MPU6050 accelgyro;
-float maxX = 19000;
-float maxY = 27000;
-float maxZ = 24000;
-int ax, ay, az;
-int gx, gy, gz;
+//float maxX = 19000;
+//float maxY = 27000;
+//float maxZ = 24000;
+//int ax, ay, az;
+//int gx, gy, gz;
 int angleXYZ[3]; //[x,y,z]
 //int val;
-float ax_f = 0.0, ay_f = 0.0, az_f = 0.0;
-float gx_f = 0.0, gy_f = 0.0, gz_f = 0.0;
+//float ax_f = 0.0, ay_f = 0.0, az_f = 0.0;
+//float gx_f = 0.0, gy_f = 0.0, gz_f = 0.0;
 unsigned long filter_timer;
 const float toDeg = 180.0 / M_PI;
-uint8_t mpuIntStatus;   // holds actual interrupt status byte from MPU
-uint8_t devStatus;      // return status after each device operation (0 = success, !0 = error)
-uint16_t packetSize;    // expected DMP packet size (default is 42 bytes)
-uint16_t fifoCount;     // count of all bytes currently in FIFO
-uint8_t fifoBuffer[64]; // FIFO storage buffer
-Quaternion q;           // [w, x, y, z]         quaternion container
-VectorFloat gravity;    // [x, y, z]            gravity vector
-float ypr[3];           // [yaw, pitch, roll]   yaw/pitch/roll container and gravity vector
+uint8_t mpuIntStatus;   
+uint8_t devStatus;      
+uint16_t packetSize;    
+//uint16_t fifoCount;     
+uint8_t fifoBuffer[64]; 
+Quaternion q;           
+VectorFloat gravity;    
+float ypr[3];           
 ////////////////////
-bool flagNewData = true;
+//bool flagNewData = true;
 Servo arrayServo[NUMBER_OF_SERVOMOTORS];
 int jointAngleValues[NUMBER_OF_SERVOMOTORS];
 ////////////////////
@@ -50,8 +50,6 @@ void loop(){
   if (millis() - filter_timer > FILTER_STEP) {
     filter_timer = millis();
     readingAngleFromDMP();
-    //readingSensorMPU();
-    //SensorPolling();
     comPortListener();
   }
 }
@@ -80,12 +78,19 @@ void readingAngleFromDMP(){
     angleXYZ[1] = ypr[1] * toDeg;
     angleXYZ[2] = ypr[0] * toDeg;
   }
+  Serial.print('D');
+  Serial.print(angleXYZ[0]);Serial.print('$');
+  Serial.print(angleXYZ[1]);Serial.print('$');
+  Serial.print(angleXYZ[2]);
+  Serial.println('#');
+  /*
   Serial.print(angleXYZ[0]); Serial.print(' ');
   Serial.print(angleXYZ[1]); Serial.print(' ');
   Serial.println(angleXYZ[2]);
+  */
 }
 
-
+/*
 void readingSensorMPU(){
   accelgyro.getMotion6(&ax, &ay, &az, &gx, &gy, &gz);
   ax_f += (ax - ax_f)*FILTER_COEF;
@@ -101,7 +106,7 @@ void readingSensorMPU(){
   Serial.print(new_ax); Serial.print(' ');
   Serial.print(new_ay); Serial.print(' ');
   Serial.println(new_az);
-  /* 
+  
   Serial.print(String(ax_f,0));
   Serial.print(" ");Serial.print(String(ay_f,0));
   Serial.print(" ");Serial.print(String(az_f,0)); 
@@ -109,8 +114,9 @@ void readingSensorMPU(){
   Serial.print(" ");Serial.print(String(gy_f,0)); 
   Serial.print(" ");Serial.print(String(gz_f,0)); 
   Serial.println(" ");
-  */
+  
 }
+*/
 
 ////////////////////
 void comPortListener(){
